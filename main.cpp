@@ -1,68 +1,138 @@
-#include <iostream>
-#include <cstring>
 #include "Node.h"
 
 using namespace std;
 
-struct student {
-  char first[20];
-  char last[20];
-  int id;
-  float gpa;
-}
-
-struct node {
-  int x;
-  node *next;
-}
+// Function prototypes
+Node* recursive_add(Node* current, int id);
+void add(Node* &head);
+void print(Node* current);
+void avg(Node* head);
+Node* recursive_delete(Node* current, int id);
+void del(Node* &head);
 
 int main() {
-
-  node *root;      // This won't change, or we would lose the list in memory
-  node *conductor; // This will point to each node as it traverses the list
-
-  root = new node;
-  
-  
   char input[7];
-  cout << "Enter a command [ADD, PRINT, or DELETE]: ";
-  cin >> input;
+  Node* head = NULL;
+  
+  cout << "Enter a command [ADD, PRINT, AVERAGE, DELETE, or QUIT]: ";
 
-  // Convert input to all CAPS
-  for (int i = 0; i < strlen(input); i++) {
-    input[i] = toupper(input[i]);
-  }
+  while (strcasecmp(input, "quit") != 0) {
+    cin >> input;
 
-  if (strcmp(input, "ADD") == 0) {
-    char first[25];
-    char last[25];
-    int id;
-    float gpa;
+    if (strcasecmp(input, "add") == 0) {
+      add(head);
+    } else {      
+      if (head == NULL) {
+        cout << "You don't have any students. Add some!" << endl;
+      } else {
+        if (strcasecmp(input, "print") == 0) { print(head); }
+        if (strcasecmp(input, "delete") == 0) { del(head); }
+        if (strcasecmp(input, "average") == 0) { avg(head); }
+      }
+    }
 
-    cout << "First name: ";
-    cin >> first;
-
-    cout << "Last name: ";
-    cin >> last;
-
-    cout << "ID: ";
-    cin >> id;
-
-    cout << "GPA: ";
-    cin >> gpa;
-
-    // add_student() function call
-    // main()
-  }
-
-  if (strcmp(input, "PRINT") == 0) {
-    // print_all(students) function call
-    // main()
-  }
-
-  if (strcmp(input, "DELETE") == 0) {
-    int id;
+    if (strcasecmp(input, "quit") != 0) {
+      cout << "\nEnter a command [ADD, PRINT, AVERAGE, DELETE, or QUIT]: ";
+    }
   }
   
   return 0;
+}
+
+Node* recursive_add(Node* current, int id) {
+  if ((current->getNext() != NULL) && (current->getNext()->getStudent()->getID() <= id)) {
+    return recursive_add(current->getNext(), id);
+  } else {
+    return current;
+  }
+}
+
+void add(Node* &head) {
+  char first[25];
+  char last[25];
+  int id;
+  float gpa;
+     
+  cout << "First name: ";
+  cin >> first;
+
+  cout << "Last name: ";
+  cin >> last;
+
+  cout << "ID: ";
+  cin >> id;
+
+  cout << "GPA: ";
+  cin >> gpa;
+
+  Student* student = new Student(first, last, id, gpa);
+  Node* node = new Node(student);
+
+  if (head == NULL) {
+    head = node;    
+  } else if (head->getStudent()->getID() > id) {
+    node->setNext(head);
+    head = node;
+  } else {
+    Node* current = recursive_add(head, id);
+    node->setNext(current->getNext());
+    current->setNext(node);
+  }
+}
+
+void print(Node* current) {
+  if (current != NULL) {
+    cout << current->getStudent()->getName() << ", " << current->getStudent()->getID() << ", " << fixed << setprecision(2) << current->getStudent()->getGPA() << endl;
+    print(current->getNext());
+  }
+}
+
+void avg(Node* head) {
+  double avg = 0;
+  double total = 0;
+  int numStudents = 0;
+
+  Node* current = head;
+  while (current != NULL) {
+    total += current->getStudent()->getGPA();
+    numStudents++;
+    current = current->getNext();
+  }
+  avg = total/numStudents;
+  cout << setprecision(2) << avg << endl;
+}
+
+Node* recursive_delete(Node* current, int id) {
+  if ((current->getNext() != NULL) && (current->getNext()->getStudent()->getID() != id)) {
+    return recursive_delete(current->getNext(), id);
+  } else if (current->getNext() == NULL) {
+    cout << "Sorry, I wasn't able to find a student with that ID." << endl;
+    return NULL;
+  } else {
+    return current;
+  }
+}
+
+void del(Node* &head) {
+  int id;
+  cout << "ID of student you'd like to delete: ";  
+  cin >> id;
+
+  if (head->getStudent()->getID() == id) {
+    if (head->getNext() == NULL) {
+      delete head;
+      head = NULL;
+    } else {
+      Node* node = head->getNext();
+      delete head;
+      head = node;
+    }
+  } else {
+    Node* current = recursive_delete(head, id);
+    if (current != NULL) {
+      Node* node = current->getNext()->getNext();
+      delete current->getNext();
+      current->setNext(node);
+    }
+  }
 }
