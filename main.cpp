@@ -39,6 +39,7 @@ int main() {
   return 0;
 }
 
+// Provides recursive functionality for add method
 Node* recursive_add(Node* current, int id) {
   if ((current->getNext() != NULL) && (current->getNext()->getStudent()->getID() <= id)) {
     return recursive_add(current->getNext(), id);
@@ -47,6 +48,7 @@ Node* recursive_add(Node* current, int id) {
   }
 }
 
+// Adds a new student to linked list, utilizing inputted values
 void add(Node* &head) {
   char first[25];
   char last[25];
@@ -80,6 +82,7 @@ void add(Node* &head) {
   }
 }
 
+// Recursively prints all students contained within the linked list
 void print(Node* current) {
   if (current != NULL) {
     cout << current->getStudent()->getName() << ", " << current->getStudent()->getID() << ", " << fixed << setprecision(2) << current->getStudent()->getGPA() << endl;
@@ -87,6 +90,7 @@ void print(Node* current) {
   }
 }
 
+// Finds the average of all GPA's of students within the linked list
 void avg(Node* head) {
   double avg = 0;
   double total = 0;
@@ -102,6 +106,7 @@ void avg(Node* head) {
   cout << setprecision(2) << avg << endl;
 }
 
+// Provides recursive functionality for del method
 Node* recursive_delete(Node* current, int id) {
   if ((current->getNext() != NULL) && (current->getNext()->getStudent()->getID() != id)) {
     return recursive_delete(current->getNext(), id);
@@ -113,6 +118,7 @@ Node* recursive_delete(Node* current, int id) {
   }
 }
 
+// Removes student w/ specified ID from linked list
 void del(Node* &head) {
   int id;
   cout << "ID of student you'd like to delete: ";  

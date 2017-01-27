@@ -4,10 +4,12 @@ using namespace std;
 
 // Constructor
 Student::Student(char* _first, char* _last, int _id, double _gpa) {
+  // Concatenate the first & last names into full name + store within unified variable (name)
   name = new char [51];
   strcpy(name, _first);
   strcat(name, " ");
   strcat(name, _last);
+
   id = _id;
   gpa = _gpa;
 }

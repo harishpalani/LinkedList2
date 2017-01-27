@@ -9,17 +9,18 @@ using namespace std;
 
 class Student {
 
- public:
-  Student(char*, char*, int, double);
-  ~Student();
-  char* getName();
-  int getID();
-  double getGPA();
+  public:
+	Student(char*, char*, int, double);
+	~Student();
+	char* getName();
+	int getID();
+	double getGPA();
 
- protected:
-  char* name;
-  int id;
-  double gpa;
+  protected:
+	char* name;
+	int id;
+	double gpa;
+	
 };
 
 #endif
